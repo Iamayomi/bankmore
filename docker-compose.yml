@@ -11,7 +11,7 @@ services:
     environment:
       - NODE_ENV=development
     volumes:
-      - ./app/:auth-user-service
+      - ./auth-user-service:/usr/src/app
       - /app/node_modules
     env_file:
       - ./auth-user-service/.env
@@ -23,7 +23,7 @@ services:
       - app-network
 
   mongoose_database:
-    image: mongo:6.0
+    image: mongo
     ports:
       - "27017:27017"
     volumes:
