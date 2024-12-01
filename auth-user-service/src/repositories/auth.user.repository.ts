@@ -1,27 +1,28 @@
 import UserModel from "../models/user.model";
 import User from "../entities/user.entities";
 
-class UserAuthRespository {
-  async createUserBank(data: Partial<User>): Promise<User> {
-    const newUserBank = new UserModel(data);
-    return await newUserBank.save();
+class UserAuthRepository {
+
+  public async createUser(data: Partial<User>): Promise<User> {
+    const newUser = new UserModel(data);
+    return await newUser.save();
   }
 
-  async getUserBankById(id: string): Promise<User | null> {
+  public async getUserById(id: string): Promise<User | null> {
     return await UserModel.findById(id).exec();
   }
 
-  async updateUserBank(id: string, data: Partial<User>): Promise<User | null> {
+  public async updateUser(id: string, data: Partial<User>): Promise<User | null> {
     return await UserModel.findByIdAndUpdate(id, data, { new: true }).exec();
   }
 
-  async deleteUserBank(id: string): Promise<void> {
+  public async deleteUser(id: string): Promise<void> {
     await UserModel.findByIdAndDelete(id).exec();
   }
 
-  async getUserBanksByUserId(userId: string): Promise<User[]> {
-    return await UserModel.find({ userId }).exec();
+  public async getAllUser(): Promise<User[]> {
+    return await UserModel.find().exec();
   }
 }
 
-export default UserAuthRespository;
+export default UserAuthRepository;
