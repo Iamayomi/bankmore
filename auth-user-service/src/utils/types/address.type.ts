@@ -1,6 +1,6 @@
 import mongoose, { Document } from "mongoose";
 
-export default interface UserTypes extends Document {
+export default interface UserAddress extends Document {
   address: {
     street: string;
     city: string;

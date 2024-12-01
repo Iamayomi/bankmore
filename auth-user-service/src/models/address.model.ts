@@ -1,5 +1,5 @@
 import mongoose, { Schema } from "mongoose";
-import UserPreference from "../utils/types/preference.type";
+import UserAddress from "../utils/types/address.type";
 
 const UserAddressSchema: Schema = new Schema(
   {
@@ -32,4 +32,4 @@ const UserAddressSchema: Schema = new Schema(
   { timestamps: true }
 );
 
-export default mongoose.model<UserPreference>("Address", UserAddressSchema);
+export default mongoose.model<UserAddress>("Address", UserAddressSchema);

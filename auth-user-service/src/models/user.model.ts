@@ -76,7 +76,7 @@ const UserSchema: Schema = new Schema(
       required: true,
     },
 
-    preference: {
+    preferences: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Address",
       required: true,
