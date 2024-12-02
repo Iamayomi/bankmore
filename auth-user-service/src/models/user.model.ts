@@ -1,4 +1,5 @@
 import mongoose, { Schema } from "mongoose";
+import bcrypt from "bcryptjs";
 import UserTypes from "../utils/types/user.type";
 
 const UserSchema: Schema = new Schema(
@@ -14,7 +15,7 @@ const UserSchema: Schema = new Schema(
       unique: true,
     },
 
-    passwordHash: {
+    password: {
       type: String,
       required: true,
     },
@@ -34,14 +35,14 @@ const UserSchema: Schema = new Schema(
 
     accountNumber: {
       type: String,
-      required: true,
+      // required: true,
       unique: true,
     },
 
     accountType: {
       type: String,
       enum: ["savings", "current", "business"],
-      required: true,
+      // required: true,
     },
 
     balance: {
@@ -73,17 +74,26 @@ const UserSchema: Schema = new Schema(
     address: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Address",
-      required: true,
+      // required: true,
     },
 
     preferences: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Address",
-      required: true,
+      // required: true,
     },
   },
 
   { timestamps: true }
 );
+
+// hash user password bebofore save
+UserSchema.pre<UserTypes>("save", async function (next) {
+  if (!this.isModified("password")) return next();
+
+  const hashPassword = await bcrypt.genSalt(10);
+  this.password = await bcrypt.hash(this.password, hashPassword)
+  next();
+});
 
 export default mongoose.model<UserTypes>("User", UserSchema);

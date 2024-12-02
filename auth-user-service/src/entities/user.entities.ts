@@ -1,9 +1,11 @@
-class User {
+import bcrypt from "bcryptjs";
+
+class UserEntities  {
   constructor(
     public id: string,
     public name: string,
     public email: string,
-    public passwordHash: string,
+    public password: string,
     public username: string,
     public profilePicture: string,
     public bio: string,
@@ -18,9 +20,14 @@ class User {
     public preferences: string
   ) {}
 
-//   public validateAccountNumber(): boolean {
-//     return /^\d{10}$/.test(this.accountNumber);
-//   }
+  //   public validateAccountNumber(): boolean {
+  //     return /^\d{10}$/.test(this.accountNumber);
+  //   }
+
+  // user password Validation
+  async validatePassword(userPassword: string): Promise<boolean> {
+    return bcrypt.compare(userPassword, this.password); 
+  }
 }
 
-export default User;
+export default UserEntities;

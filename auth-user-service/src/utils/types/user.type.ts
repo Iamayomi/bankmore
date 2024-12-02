@@ -4,7 +4,7 @@ export default interface UserTypes extends Document {
   id: string;
   name: string;
   email: string;
-  passwordHash: string;
+  password: string;
   username?: string;
   profilePicture?: string;
   bio?: string;
@@ -18,4 +18,5 @@ export default interface UserTypes extends Document {
 
   address: mongoose.Types.ObjectId[];
   preferences: mongoose.Types.ObjectId[];
+  // validatePassword(password: string): Promise<boolean>;
 }
