@@ -1,5 +1,6 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose, { Schema, Types } from "mongoose";
 import bcrypt from "bcryptjs";
+
 import UserTypes from "../utils/types/user.type";
 
 const UserSchema: Schema = new Schema(
@@ -11,12 +12,15 @@ const UserSchema: Schema = new Schema(
 
     email: {
       type: String,
-      required: true,
+      required: [true, "please provide an email"],
+      trim: true,
+      // validate: [validator.isEmail, "Please provide a valid email"],
       unique: true,
     },
 
     password: {
       type: String,
+      minLength: [6, "password must be greater than {VALUE}"],
       required: true,
     },
 
@@ -30,7 +34,13 @@ const UserSchema: Schema = new Schema(
 
     phoneNumber: {
       type: String,
-      required: true,
+      required: [true, "User phone number required"],
+      validate: {
+        validator: function (val: string): boolean {
+          return /\d{3}-\d{3}-\d{4}/.test(val);
+        },
+        // message: (props: string) => `${props} is not a valid phone number!`
+      },
     },
 
     accountNumber: {
@@ -70,7 +80,7 @@ const UserSchema: Schema = new Schema(
       enum: ["active", "pending", "suspended"],
       default: "active",
     },
-    
+
     address: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Address",
@@ -87,12 +97,17 @@ const UserSchema: Schema = new Schema(
   { timestamps: true }
 );
 
+// UserSchema.pre(/^find/, function (next) {
+//   this.find({ active: { $ne: false } });
+//   next();
+// });
+
 // hash user password bebofore save
 UserSchema.pre<UserTypes>("save", async function (next) {
-  if (!this.isModified("password")) return next();
+  if (!this.isModified("password") || this.isNew) return next();
 
   const hashPassword = await bcrypt.genSalt(10);
-  this.password = await bcrypt.hash(this.password, hashPassword)
+  this.password = await bcrypt.hash(this.password, hashPassword);
   next();
 });
 

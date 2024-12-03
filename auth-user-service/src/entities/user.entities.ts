@@ -1,4 +1,5 @@
 import bcrypt from "bcryptjs";
+import { IsEmail, IsPhoneNumber, validate} from "class-validator"
 
 class UserEntities  {
   constructor(
@@ -9,7 +10,7 @@ class UserEntities  {
     public username: string,
     public profilePicture: string,
     public bio: string,
-    public phoneNumber: string,
+    public phone: string,
     public roles: string[],
     public permissions: string[],
     public createdAt: Date,
@@ -20,9 +21,10 @@ class UserEntities  {
     public preferences: string
   ) {}
 
-  //   public validateAccountNumber(): boolean {
-  //     return /^\d{10}$/.test(this.accountNumber);
-  //   }
+
+    // public validateAccountNumber(): boolean {
+    //   return /^\d{10}$/.test(this.accountNumber);
+    // }
 
   // user password Validation
   async validatePassword(userPassword: string): Promise<boolean> {

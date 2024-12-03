@@ -7,6 +7,8 @@ const app = express();
 
 connectDB(config.get("MONGO_URL"));
 
+app.enable('trust proxy');
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
