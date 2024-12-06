@@ -1,13 +1,20 @@
-import { IsString, IsEmail, MinLength } from 'class-validator';
+import Joi from "joi";
 
-export class CreateUserDTO {
-  @IsEmail({}, { message: 'Invalid email address' })
-  email!: string; // Use non-null assertion or initialize the property.
-
-  @IsString({ message: 'Password is required' })
-  @MinLength(6, { message: 'Password must be at least 6 characters long' })
-  password!: string;
-
-  @IsString({ message: 'Name is required' })
-  name!: string;
-}
+export const userDto = Joi.object({
+  username: Joi.string().min(3).max(20),
+  name: Joi.string().min(3).max(20).required(),
+  age: Joi.date().required(),
+  email: Joi.string().email().required(),
+  password: Joi.string().min(6).required(),
+  profilePicture: Joi.string().required(),
+  phoneNumber: Joi.string().required(),
+  accountNumber: Joi.string(),
+  accountType: Joi.string(),
+  balance: Joi.string(),
+  role: Joi.string(),
+  permissions: Joi.array().items(Joi.string().min(1)),
+  lastLogin: Joi.date(),
+  status: Joi.string(),
+  address: Joi.string(),
+  preferences: Joi.string(),
+});

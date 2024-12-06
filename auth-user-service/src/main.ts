@@ -1,5 +1,3 @@
-import 'reflect-metadata';
-
 import app from "./app";
 import config from "config";
 import log from "./utils/logger/logger";

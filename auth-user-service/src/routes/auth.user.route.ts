@@ -1,4 +1,6 @@
 import express from "express";
+import { validateRequest } from "../middleware/validation";
+import { userDto } from "../dto/user.dto";
 import { UserController } from "../controllers/user.controller";
 
 const userController = new UserController();
@@ -6,8 +8,10 @@ const userController = new UserController();
 
 const router = express.Router();
 
+router.post(
+  "/register",
+  validateRequest(userDto),
+  userController.createNewUser
+);
 
-router.post("/register", userController.createNewUser)
-
-
-export { router as authUserRouter};
+export { router as authUserRouter };

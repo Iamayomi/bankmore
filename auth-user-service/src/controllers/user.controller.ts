@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import { AuthUserService } from "../services/authUser.service";
 // import { UserAuthRespository } from "../repositories/auth.user.repository";
 import UserAuthRepository from "../repositories/auth.user.repository";
+import { userDto } from "../dto/user.dto";
 
 export class UserController {
   private authUserService: AuthUserService;
@@ -17,7 +18,7 @@ export class UserController {
 
     try {
       const user = await this.authUserService.createUser(req.body);
-      res.status(201).json(user);
+      res.status(201).json({ status: "success", message: 'User created successfully', data: user });
     } catch (error: any) {
       res.status(400).json({ error: error.message });
     }

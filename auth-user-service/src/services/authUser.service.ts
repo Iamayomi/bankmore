@@ -25,9 +25,9 @@ export class AuthUserService {
 
   public async createUser(data: Partial<UserTypes>): Promise<UserTypes> {
 
-    if (!data.name) {
-      throw new Error('Name is required');
-    }
+    // if (!data.name) {
+    //   throw new Error('Name is required');
+    // }
     
     return this.userRepository.createUser(data); 
   }

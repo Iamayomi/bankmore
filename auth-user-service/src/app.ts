@@ -1,5 +1,5 @@
 import express from "express";
-import connectDB from "./utils/mongoose-client";
+import connectDB from "./utils/mongoose";
 import config from "config";
 import { authUserRouter } from "./routes/auth.user.route";
 

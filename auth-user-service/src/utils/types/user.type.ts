@@ -4,6 +4,7 @@ export default interface UserTypes extends Document {
   id: string;
   name: string;
   email: string;
+  age: Date,
   password: string;
   username?: string;
   profilePicture?: string;

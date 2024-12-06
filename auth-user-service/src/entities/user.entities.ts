@@ -1,5 +1,4 @@
 import bcrypt from "bcryptjs";
-import { IsEmail, IsPhoneNumber, validate} from "class-validator"
 
 class UserEntities  {
   constructor(

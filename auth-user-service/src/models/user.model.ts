@@ -18,6 +18,11 @@ const UserSchema: Schema = new Schema(
       unique: true,
     },
 
+    age: {
+      type: Date,
+      required: true,
+    },
+
     password: {
       type: String,
       minLength: [6, "password must be greater than {VALUE}"],
@@ -34,13 +39,7 @@ const UserSchema: Schema = new Schema(
 
     phoneNumber: {
       type: String,
-      required: [true, "User phone number required"],
-      validate: {
-        validator: function (val: string): boolean {
-          return /\d{3}-\d{3}-\d{4}/.test(val);
-        },
-        // message: (props: string) => `${props} is not a valid phone number!`
-      },
+      required: [true, "User phone number required"]
     },
 
     accountNumber: {
@@ -108,7 +107,8 @@ UserSchema.pre<UserTypes>("save", async function (next) {
 
   const hashPassword = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, hashPassword);
-  next();
+
+  return next();
 });
 
 export default mongoose.model<UserTypes>("User", UserSchema);
