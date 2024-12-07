@@ -8,7 +8,10 @@ class UserAuthRepository {
   public async createUser(data: Partial<UserTypes>): Promise<UserTypes> {
     // const UserDto = Object.assign(userDto, req.body);
     // console.log(data)
-    return await UserModel.create(data);
+    const user = new UserModel(data);
+    await user.validate(); // Explicit validation
+    return await user.save();
+    // return await UserModel.create(data).;
   }
 
   // public async getUserById(id: string): Promise<User | null> {

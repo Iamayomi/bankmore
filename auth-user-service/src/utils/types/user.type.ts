@@ -19,5 +19,5 @@ export default interface UserTypes extends Document {
 
   address: mongoose.Types.ObjectId[];
   preferences: mongoose.Types.ObjectId[];
-  // validatePassword(password: string): Promise<boolean>;
+  validatePassword(password: string): Promise<boolean>;
 }

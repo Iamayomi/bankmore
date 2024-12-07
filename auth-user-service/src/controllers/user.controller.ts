@@ -2,7 +2,8 @@ import { Request, Response, NextFunction } from "express";
 import { AuthUserService } from "../services/authUser.service";
 // import { UserAuthRespository } from "../repositories/auth.user.repository";
 import UserAuthRepository from "../repositories/auth.user.repository";
-import { userDto } from "../dto/user.dto";
+import UserEntities from "../entities/user.entities";
+// console.log(new UserEntities())
 
 export class UserController {
   private authUserService: AuthUserService;
@@ -10,15 +11,28 @@ export class UserController {
   constructor() {
     const userRepository = new UserAuthRepository();
     this.authUserService = new AuthUserService(userRepository);
+    // this.userAcctNumber = new UserEntities
+    // this.userAcctNumber =  new UserEntities(userRepository);
+
   }
 
   // Create UserBank
   public createNewUser = async (req: Request, res: Response): Promise<void> => {
     // const { userId, bankName, accountNumber } = req.body;
+    const userAcctNumber =  new UserEntities(req.body).generateAccount;
+    console.log(userAcctNumber)
+
+    const userData = {name: req.body.name, email: req.body.email, accountNumber: userAcctNumber, age: req.body.password, phoneNumber: req.body.phoneNumber};
 
     try {
       const user = await this.authUserService.createUser(req.body);
-      res.status(201).json({ status: "success", message: 'User created successfully', data: user });
+      res
+        .status(201)
+        .json({
+          status: "success",
+          message: "User created successfully",
+          data: user,
+        });
     } catch (error: any) {
       res.status(400).json({ error: error.message });
     }

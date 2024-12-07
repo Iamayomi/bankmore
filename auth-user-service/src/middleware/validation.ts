@@ -7,11 +7,7 @@ export const validateRequest =
   (schema: Joi.ObjectSchema) =>
   async (req: Request, res: Response, next: NextFunction): Promise<void>  => {
     try {
-      await schema.validate({
-        body: req.body,
-        query: req.body,
-        param: req.params,
-      });
+      await schema.validateAsync( req.body);
       return next();
     } catch (err: any) {
       logger.error(err);

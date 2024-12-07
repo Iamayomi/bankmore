@@ -1,8 +1,7 @@
-import AuthUserRepository  from '../repositories/auth.user.repository';
-// import User from "../entities/user.entities"
+import AuthUserRepository from "../repositories/auth.user.repository";
 import UserTypes from "../utils/types/user.type";
 
-import UserAuthRepository from '../repositories/auth.user.repository';
+import UserAuthRepository from "../repositories/auth.user.repository";
 
 export class AuthUserService {
   private userRepository: AuthUserRepository;
@@ -24,16 +23,15 @@ export class AuthUserService {
   // }
 
   public async createUser(data: Partial<UserTypes>): Promise<UserTypes> {
-
-    // if (!data.name) {
-    //   throw new Error('Name is required');
-    // }
-    
-    return this.userRepository.createUser(data); 
+    try {
+      return this.userRepository.createUser(data);
+    } catch (err: any) {
+      throw new Error(err);
+    }
   }
 
   // public async updateUser(id: string, data: Partial<User>): Promise<User | null> {
-  //   return this.userRepository.updateUser(id, data); 
+  //   return this.userRepository.updateUser(id, data);
   // }
 
   // public async deleteUser(id: string): Promise<void> {

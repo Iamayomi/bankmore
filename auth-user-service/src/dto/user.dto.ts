@@ -2,12 +2,12 @@ import Joi from "joi";
 
 export const userDto = Joi.object({
   username: Joi.string().min(3).max(20),
-  name: Joi.string().min(3).max(20).required(),
+  name: Joi.string().required(),
   age: Joi.date().required(),
   email: Joi.string().email().required(),
   password: Joi.string().min(6).required(),
-  profilePicture: Joi.string().required(),
-  phoneNumber: Joi.string().required(),
+  profilePicture: Joi.string(),
+  phoneNumber: Joi.string(),
   accountNumber: Joi.string(),
   accountType: Joi.string(),
   balance: Joi.string(),
@@ -18,3 +18,4 @@ export const userDto = Joi.object({
   address: Joi.string(),
   preferences: Joi.string(),
 });
+
