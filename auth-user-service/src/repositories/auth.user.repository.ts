@@ -1,17 +1,18 @@
 import UserModel from "../models/user.model";
 import UserTypes from "../utils/types/user.type";
-// import { userDto } from "../dto/user.dto";
-
+import { signinDto, loginDto } from "../dto/user.dto";
 
 class UserAuthRepository {
-
   public async createUser(data: Partial<UserTypes>): Promise<UserTypes> {
-    // const UserDto = Object.assign(userDto, req.body);
-    // console.log(data)
-    const user = new UserModel(data);
-    await user.validate(); // Explicit validation
-    return await user.save();
-    // return await UserModel.create(data).;
+    const userDto = Object.assign(signinDto, data);
+    return await UserModel.create(userDto);
+  }
+
+  public async findByEmail(
+    data: Pick<UserTypes, "email">
+  ): Promise<UserTypes | null> {
+    const { value } = loginDto.validate(data);
+    return await UserModel.findOne(value).exec();
   }
 
   // public async getUserById(id: string): Promise<User | null> {

@@ -30,6 +30,22 @@ export class AuthUserService {
     }
   }
 
+  public async signinUser(data: Pick<UserTypes, "email" | "password">): Promise<any> {
+
+      const { email, password } = data;
+      const user = await this.userRepository.findByEmail({email});
+    
+      if (!user) {
+        throw new Error('User not found');
+      }
+      const isPasswordValid = await user.comparePassword(password);
+      if (!isPasswordValid) {
+        throw new Error('Invalid password');
+      }
+      
+    return user;
+  }
+
   // public async updateUser(id: string, data: Partial<User>): Promise<User | null> {
   //   return this.userRepository.updateUser(id, data);
   // }

@@ -6,26 +6,26 @@ const UserSchema: Schema = new Schema(
   {
     name: {
       type: String,
-      required: true,
+      // required: true,
     },
 
     email: {
       type: String,
-      required: [true, "please provide an email"],
+      // required: [true, "please provide an email"],
       trim: true,
       // validate: [validator.isEmail, "Please provide a valid email"],
       unique: true,
     },
 
-    age: {
+    dateOfBirth: {
       type: Date,
-      required: true,
+      // required: true,
     },
 
     password: {
       type: String,
       minLength: [6, "password must be greater than {VALUE}"],
-      required: true,
+      // required: true,
     },
 
     username: {
@@ -38,7 +38,7 @@ const UserSchema: Schema = new Schema(
 
     phoneNumber: {
       type: String,
-      required: [true, "User phone number required"],
+      // required: [true, "User phone number required"],
     },
 
     accountNumber: {
@@ -99,6 +99,11 @@ const UserSchema: Schema = new Schema(
 //   this.find({ active: { $ne: false } });
 //   next();
 // });
+
+// user password Validation
+UserSchema.methods.comparePassword = async function (userPassword: string): Promise<boolean> {
+  return await bcrypt.compare(userPassword, this.password);
+};
 
 // hash user password bebofore save
 UserSchema.pre<UserTypes>("save", async function (next) {

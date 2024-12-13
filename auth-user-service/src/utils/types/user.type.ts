@@ -4,12 +4,13 @@ export default interface UserTypes extends Document {
   id: string;
   name: string;
   email: string;
-  age: Date,
+  dateOfBirth: Date,
   password: string;
   username?: string;
   profilePicture?: string;
   bio?: string;
   phoneNumber?: string;
+  accountNumber: string;
   roles: string[];
   permissions: string[];
   createdAt: Date;
@@ -19,5 +20,5 @@ export default interface UserTypes extends Document {
 
   address: mongoose.Types.ObjectId[];
   preferences: mongoose.Types.ObjectId[];
-  validatePassword(password: string): Promise<boolean>;
+  comparePassword(password: string): Promise<boolean>;
 }

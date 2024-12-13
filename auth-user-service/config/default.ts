@@ -7,4 +7,6 @@ export default {
 	host:  process.env.HOST || "localhost" as string,
 	NODE_ENV: process.env.NODE_ENV || "development" as string,
 	MONGO_URL: process.env.MONGO_URL || "mongodb://localhost:27017/bankmore-auth-user" as string,
+	JWT_SECRET: process.env.JWT_SECRET || "GHSDJSHJASKJJASIKAJSAJSAHS" as string,
+	JWT_EXPIRES: process.env.JWT_EXPIRES || "1h" as string
 }

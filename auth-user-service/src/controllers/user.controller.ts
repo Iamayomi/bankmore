@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from "express";
 import { AuthUserService } from "../services/authUser.service";
-// import { UserAuthRespository } from "../repositories/auth.user.repository";
 import UserAuthRepository from "../repositories/auth.user.repository";
 import UserEntities from "../entities/user.entities";
+import JwtUtilities from "../utils/sign.token";
 // console.log(new UserEntities())
 
 export class UserController {
@@ -11,28 +11,53 @@ export class UserController {
   constructor() {
     const userRepository = new UserAuthRepository();
     this.authUserService = new AuthUserService(userRepository);
-    // this.userAcctNumber = new UserEntities
-    // this.userAcctNumber =  new UserEntities(userRepository);
-
   }
 
-  // Create UserBank
+  // Create User
   public createNewUser = async (req: Request, res: Response): Promise<void> => {
-    // const { userId, bankName, accountNumber } = req.body;
-    const userAcctNumber =  new UserEntities(req.body).generateAccount;
-    console.log(userAcctNumber)
+    const acctNumber = new UserEntities(req.body).generateAccount();
+    const userAcctNumber = await acctNumber;
 
-    const userData = {name: req.body.name, email: req.body.email, accountNumber: userAcctNumber, age: req.body.password, phoneNumber: req.body.phoneNumber};
+    const userData = {
+      name: req.body.name,
+      email: req.body.email,
+      accountNumber: userAcctNumber,
+      dateOfBirth: req.body.dateOfBirth,
+      phoneNumber: req.body.phoneNumber,
+      password: req.body.password,
+    };
 
     try {
-      const user = await this.authUserService.createUser(req.body);
-      res
-        .status(201)
-        .json({
-          status: "success",
-          message: "User created successfully",
-          data: user,
-        });
+      const user = await this.authUserService.createUser(userData);
+      res.status(201).json({
+        status: "success",
+        message: "User created successfully",
+        data: user,
+      });
+    } catch (error: any) {
+      res.status(400).json({ error: error.message });
+    }
+  };
+
+  // User Login
+  public signInUser = async (req: Request, res: Response): Promise<void> => {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+      res.status(400).json({ error: "Email and password are required." });
+      return;
+    }
+
+    try {
+      const user = await this.authUserService.signinUser({ email, password });
+      const jwtUtilities = new JwtUtilities();
+      const token = await jwtUtilities.signToken({ id: user._id, email: user.email });
+      res.status(200).json({
+        status: "success",
+        message: "User Login successfully",
+        acessToken: token,
+        data: user,
+      });
     } catch (error: any) {
       res.status(400).json({ error: error.message });
     }
