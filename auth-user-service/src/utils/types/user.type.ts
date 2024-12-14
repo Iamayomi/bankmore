@@ -16,6 +16,7 @@ export default interface UserTypes extends Document {
   createdAt: Date;
   updatedAt: Date;
   lastLogin?: Date;
+  refreshToken: string;
   status: "active" | "pending" | "suspended";
 
   address: mongoose.Types.ObjectId[];

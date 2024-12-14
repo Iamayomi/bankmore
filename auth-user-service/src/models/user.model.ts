@@ -85,6 +85,8 @@ const UserSchema: Schema = new Schema(
       // required: true,
     },
 
+    refreshToken: String,
+
     preferences: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Address",
@@ -101,7 +103,9 @@ const UserSchema: Schema = new Schema(
 // });
 
 // user password Validation
-UserSchema.methods.comparePassword = async function (userPassword: string): Promise<boolean> {
+UserSchema.methods.comparePassword = async function (
+  userPassword: string
+): Promise<boolean> {
   return await bcrypt.compare(userPassword, this.password);
 };
 

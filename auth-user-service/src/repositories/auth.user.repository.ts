@@ -15,10 +15,13 @@ class UserAuthRepository {
     return await UserModel.findOne(value).exec();
   }
 
-  // public async getUserById(id: string): Promise<User | null> {
-  //   return await UserModel.findById(id).exec();
-  // }
+  public async getUserById(id: string): Promise<UserTypes | null> {
+    return await UserModel.findById(id).exec();
+  }
 
+  public async getUserByToken(token: <>): Promise<UserTypes | null> {
+    return await UserModel.findOne(token).exec();
+  }
   // public async updateUser(id: string, data: Partial<User>): Promise<User | null> {
   //   return await UserModel.findByIdAndUpdate(id, data, { new: true }).exec();
   // }

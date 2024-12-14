@@ -46,6 +46,17 @@ export class AuthUserService {
     return user;
   }
 
+  public async refresh(refreshToken: string): Promise<void> {
+    const user = await this.userRepository.getUserByToken({ refreshToken: "mr"});
+
+    // if (!user || !(await bcrypt.compare(refreshToken, user.refreshToken!))) {
+    //   throw new Error('Invalid refresh token');
+    // }
+
+    // Generate a new access token
+    const accessToken = generateAccessToken(user);
+    return accessToken;
+  }
   // public async updateUser(id: string, data: Partial<User>): Promise<User | null> {
   //   return this.userRepository.updateUser(id, data);
   // }

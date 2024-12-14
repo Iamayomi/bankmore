@@ -1,8 +1,9 @@
 import { Request, Response, NextFunction } from "express";
+import config from "config";
 import { AuthUserService } from "../services/authUser.service";
 import UserAuthRepository from "../repositories/auth.user.repository";
 import UserEntities from "../entities/user.entities";
-import JwtUtilities from "../utils/sign.token";
+import JWTUtils from "../utils/jwt.utils";
 // console.log(new UserEntities())
 
 export class UserController {
@@ -16,6 +17,7 @@ export class UserController {
   // Create User
   public createNewUser = async (req: Request, res: Response): Promise<void> => {
     const acctNumber = new UserEntities(req.body).generateAccount();
+
     const userAcctNumber = await acctNumber;
 
     const userData = {
@@ -50,12 +52,33 @@ export class UserController {
 
     try {
       const user = await this.authUserService.signinUser({ email, password });
-      const jwtUtilities = new JwtUtilities();
-      const token = await jwtUtilities.signToken({ id: user._id, email: user.email });
+
+      const jwtUtils = new JWTUtils();
+
+      const accessToken = await jwtUtils.signAccessToken({
+        id: user._id,
+        email: user.email,
+      });
+
+      const refreshToken = await jwtUtils.signRefreshToken({
+        id: user._id,
+        email: user.email,
+      });
+
+      const jwtCookiesExpires = config.get("JWT_COOKIES_EXPIRES") as number;
+
+      res.cookie("refreshToken", refreshToken, {
+        expires: new Date(Date.now() + jwtCookiesExpires * 24 * 60 * 60 * 1000),
+        secure: process.env.NODE_ENV === "production",
+        httpOnly: true,
+        sameSite: "lax",
+      });
+
       res.status(200).json({
         status: "success",
         message: "User Login successfully",
-        acessToken: token,
+        accessToken: accessToken,
+        refreshToken: refreshToken,
         data: user,
       });
     } catch (error: any) {
@@ -63,6 +86,36 @@ export class UserController {
     }
   };
 
+  public authenticate = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  )=> {
+    const token = req.headers.authorization?.split(" ")[1];
+
+    if (!token) return res.status(401).json({ error: "Token is required" });
+
+    try {
+      const decoded = new JWTUtils().verifyToken(token);
+      // req.user = decoded;
+      console.log(decoded)
+      next();
+    } catch (error: any) {
+      res.status(401).json({ error: "Invalid token" });
+    }
+  };
+
+ public resetRefreshToken = async ( req: Request,
+    res: Response,
+    next: NextFunction) => {
+    try {
+      const { refreshToken } = req.cookies;
+      
+      res.status(200).json({ accessToken: newAccessToken });
+    } catch (error) {
+      res.status(401).json({ error: error.message });
+    }
+  });
   // Get UserBanks
   //   getUserBanks = async (req: Request, res: Response): Promise<void> => {
   //     const { userId } = req.params;
