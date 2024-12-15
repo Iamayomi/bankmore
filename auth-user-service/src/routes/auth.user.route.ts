@@ -20,4 +20,9 @@ router.post(
   userController.signInUser
 );
 
+router.post(
+  "/refreshtoken",
+  userController.resetRefreshToken
+);
+
 export { router as authUserRouter };

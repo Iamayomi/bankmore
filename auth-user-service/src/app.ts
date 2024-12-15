@@ -14,7 +14,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: false }));
 
-app.use("/user", authUserRouter);
+app.use("api/auth", authUserRouter);
 
 export default app;
 

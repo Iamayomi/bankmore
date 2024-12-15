@@ -1,7 +1,9 @@
+import bcrypt from "bcryptjs";
 import AuthUserRepository from "../repositories/auth.user.repository";
 import UserTypes from "../utils/types/user.type";
-
 import UserAuthRepository from "../repositories/auth.user.repository";
+import JWTUtils from "../utils/jwt.utils";
+
 
 export class AuthUserService {
   private userRepository: AuthUserRepository;
@@ -30,32 +32,46 @@ export class AuthUserService {
     }
   }
 
-  public async signinUser(data: Pick<UserTypes, "email" | "password">): Promise<any> {
+  public async signinUser(
+    data: Pick<UserTypes, "email" | "password">
+  ): Promise<any> {
+    const { email, password } = data;
 
-      const { email, password } = data;
-      const user = await this.userRepository.findByEmail({email});
-    
-      if (!user) {
-        throw new Error('User not found');
-      }
-      const isPasswordValid = await user.comparePassword(password);
-      if (!isPasswordValid) {
-        throw new Error('Invalid password');
-      }
-      
+    const user = await this.userRepository.findByEmail({ email });
+
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    const isPasswordValid = await user.comparePassword(password);
+
+    if (!isPasswordValid) {
+      throw new Error("Invalid password");
+    }
+
     return user;
   }
 
   public async refresh(refreshToken: string): Promise<void> {
-    const user = await this.userRepository.getUserByToken({ refreshToken: "mr"});
 
-    // if (!user || !(await bcrypt.compare(refreshToken, user.refreshToken!))) {
-    //   throw new Error('Invalid refresh token');
-    // }
+    const user = await this.userRepository.getUserByToken({ refreshToken: { $exists: true } });
+    console.log(user)
 
+    if (!user || !(await bcrypt.compare(refreshToken, user.refreshToken!))) {
+      throw new Error('Invalid refresh token');
+    };
     // Generate a new access token
-    const accessToken = generateAccessToken(user);
-    return accessToken;
+    const jwtUtils = new JWTUtils;
+     const accessToken = await jwtUtils.signAccessToken(user);
+    console.log(accessToken)
+
+    // const accessToken = await jwtUtils.signAccessToken({
+    //   id: user._id,
+    //   email: user.email,
+    // });
+
+
+    // return accessToken;
   }
   // public async updateUser(id: string, data: Partial<User>): Promise<User | null> {
   //   return this.userRepository.updateUser(id, data);

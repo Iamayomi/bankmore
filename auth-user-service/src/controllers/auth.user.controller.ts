@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import config from "config";
+import bcrypt from "bcryptjs";
 import { AuthUserService } from "../services/authUser.service";
 import UserAuthRepository from "../repositories/auth.user.repository";
 import UserEntities from "../entities/user.entities";
@@ -43,6 +44,7 @@ export class UserController {
 
   // User Login
   public signInUser = async (req: Request, res: Response): Promise<void> => {
+
     const { email, password } = req.body;
 
     if (!email || !password) {
@@ -73,6 +75,10 @@ export class UserController {
         httpOnly: true,
         sameSite: "lax",
       });
+
+      user.refreshToken = await bcrypt.hash(refreshToken, 10);
+
+      await user.save();
 
       res.status(200).json({
         status: "success",
@@ -110,12 +116,15 @@ export class UserController {
     next: NextFunction) => {
     try {
       const { refreshToken } = req.cookies;
-      
+
+      const newAccessToken = await this.authUserService.refresh(refreshToken);
+
       res.status(200).json({ accessToken: newAccessToken });
-    } catch (error) {
+
+    } catch (error: any) {
       res.status(401).json({ error: error.message });
     }
-  });
+  };
   // Get UserBanks
   //   getUserBanks = async (req: Request, res: Response): Promise<void> => {
   //     const { userId } = req.params;

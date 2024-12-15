@@ -19,7 +19,7 @@ class UserAuthRepository {
     return await UserModel.findById(id).exec();
   }
 
-  public async getUserByToken(token: <>): Promise<UserTypes | null> {
+  public async getUserByToken(token: any): Promise<UserTypes | null> {
     return await UserModel.findOne(token).exec();
   }
   // public async updateUser(id: string, data: Partial<User>): Promise<User | null> {
